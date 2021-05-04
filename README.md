@@ -1,1 +1,1 @@
-My chat app, node js, socket.io, passport , pug
+single page Chat app using node js, socket.io, passport for authentication, pug view engine

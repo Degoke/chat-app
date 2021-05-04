@@ -13,15 +13,11 @@ module.exports = (app, myDataBase) => {
   }
 
   app.route('/').get((req, res) => {
-    res.render('pug', { title: 'Welcome', message: 'Please login', showLogin: true, showRegistration: true });
+    res.render('pug', { title: 'Welcome', message: 'Please login', showLogin: true, showRegistration: true, showChat: false});
   });
 
   app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('/profile')
-  })
-
-  app.route('/profile').get(ensureAuthenticated, (req, res) => {
-    res.render(process.cwd() + '/views/pug/profile', { username: req.user.username })
+    res.redirect('/chat')
   })
 
   app.route('/register').post((req, res, next) => {
@@ -39,7 +35,7 @@ module.exports = (app, myDataBase) => {
 
     })
   }, passport.authenticate('local', { failureRedirect: '/' }), (req, res, next) => {
-    res.redirect('/profile')
+    res.redirect('/chat')
   })
 
   app.route('/logout').get((req, res) => {
@@ -47,14 +43,16 @@ module.exports = (app, myDataBase) => {
     res.redirect('/')
   })
 
-  app.route('/auth/github').get(passport.authenticate('github'))
-  app.route('/auth/github/callback').get(passport.authenticate('github', {failureRedirect: '/'}), (req, res) => {
-    req.session.user_id = req.user.id
-    res.redirect('/profile')
-  })
-
   app.route('/chat').get(ensureAuthenticated, (req, res) => {
-    res.render('pug/chat', {user: req.user})
+    res.render("pug", {
+      username: req.user.username,
+      user: req.user,
+      title: "",
+      message: "",
+      showLogin: false,
+      showRegistration: false,
+      showChat: true,
+    });
   })
   
 }
